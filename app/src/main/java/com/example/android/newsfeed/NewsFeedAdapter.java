@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +39,7 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
         // Format the newsId to show 1 decimal place
         char formattedNewsId = formatNewsId(currentNewsFeed.getTitle());
         // Display the newsId of the current newsfeed in that TextView
-        newsIdView.setText(formattedNewsId);
+        newsIdView.setText("" + formattedNewsId);
 
 
         //Find the TextView with view ID primary_location
@@ -48,23 +50,23 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
         TextView titleView = (TextView) listItemView.findViewById(R.id.title);
         titleView.setText(currentNewsFeed.getTitle());
 
-        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
-        titleView.setText(currentNewsFeed.getAuthor());
+        /*TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+        titleView.setText(currentNewsFeed.getAuthor());*/
 
         // Create a new Date object from the time in milliseconds of the newsfeed
-        Date dateObject = new Date(currentNewsFeed.getTime());
+        String dateString = currentNewsFeed.getTime();
 
         // Find the TextView with view ID date
         TextView dateView = (TextView) listItemView.findViewById(R.id.date);
         // Format the date string (i.e. "Mar 3, 1984")
-        String formattedDate = formatDate(dateObject);
+        String formattedDate = formatDate(dateString);
         // Display the date of the current newsfeed in that TextView
         dateView.setText(formattedDate);
 
         // Find the TextView with view ID time
         TextView timeView = (TextView) listItemView.findViewById(R.id.time);
         // Format the time string (i.e. "4:30PM")
-        String formattedTime = formatTime(dateObject);
+        String formattedTime = formatTime(dateString);
         // Display the time of the current newsfeed in that TextView
         timeView.setText(formattedTime);
 
@@ -75,17 +77,32 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
     /**
      * Return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
      */
-    private String formatDate(Date dateObject) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("LLL dd, yyyy");
-        return dateFormat.format(dateObject);
+    private String formatDate(String dateString) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("LLL dd, yyyy");
+        return newDateFormat.format(date);
     }
 
     /**
      * Return the formatted date string (i.e. "4:30 PM") from a Date object.
      */
-    private String formatTime(Date dateObject) {
+    private String formatTime(String dateString) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
-        return timeFormat.format(dateObject);
+        return timeFormat.format(date);
     }
 
     /**
@@ -93,7 +110,7 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
      * from a decimal newsId value.
      */
     private char formatNewsId(String newsTitle) {
-        char newsId =  newsTitle.charAt(0);
+        char newsId = newsTitle.charAt(0);
         return newsId;
     }
 }

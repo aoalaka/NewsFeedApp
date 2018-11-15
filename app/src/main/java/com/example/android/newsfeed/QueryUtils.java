@@ -171,11 +171,11 @@ public final class QueryUtils {
                 String date = currentNewsFeed.getString("webPublicationDate");
                 //Extarct News URL
                 String newsUrl = currentNewsFeed.getString("webUrl");
-                //Extract "tags" JSONArray
+                /*//Extract "tags" JSONArray
                 JSONArray tagsArray = enclosedResponse.optJSONArray("tags");
                 //Loop through each tag in the array
                 ArrayList<String> nameArray = new ArrayList<>();
-                String author = "";
+                String author = "" ;
                 for (int j = 0; j < tagsArray.length(); j++) {
                     //Get tag JSONObject at position j
                     JSONObject currentTag = tagsArray.optJSONObject(j);
@@ -183,9 +183,9 @@ public final class QueryUtils {
                     String name = currentTag.getString("webTitle");
                     nameArray.add(name);
                     author += nameArray.get(j).concat(" ");
-                }
+                }*/
 
-                NewsFeed newsfeed = new NewsFeed(title, section, author, date, newsUrl);
+                NewsFeed newsfeed = new NewsFeed(title, section, date, newsUrl);
                 //Add newsfeed to list of newsfeeds
                 newsfeeds.add(newsfeed);
             }
