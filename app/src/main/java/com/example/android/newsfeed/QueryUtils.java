@@ -36,11 +36,11 @@ public final class QueryUtils {
          * Query the Guardian dataset and return a list of {@link NewsFeed} objects.
          */
         public static List<NewsFeed> fetchNewsFeedData(String requestUrl) {
-            /*try {
+            try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }*/
+            }
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -171,21 +171,18 @@ public final class QueryUtils {
                 String date = currentNewsFeed.getString("webPublicationDate");
                 //Extarct News URL
                 String newsUrl = currentNewsFeed.getString("webUrl");
-                /*//Extract "tags" JSONArray
-                JSONArray tagsArray = enclosedResponse.optJSONArray("tags");
-                //Loop through each tag in the array
-                ArrayList<String> nameArray = new ArrayList<>();
-                String author = "" ;
-                for (int j = 0; j < tagsArray.length(); j++) {
-                    //Get tag JSONObject at position j
-                    JSONObject currentTag = tagsArray.optJSONObject(j);
-                    //Extract name' details
-                    String name = currentTag.getString("webTitle");
-                    nameArray.add(name);
-                    author += nameArray.get(j).concat(" ");
-                }*/
+                //Extract "tags" JSONArray
 
-                NewsFeed newsfeed = new NewsFeed(title, section, date, newsUrl);
+                JSONArray tagsArray = currentNewsFeed.optJSONArray("tags");
+                String author = null;
+                if (tagsArray.length() > 0) {
+                    JSONObject tagsfirstObject = tagsArray.optJSONObject(0);
+                    String firstName = tagsfirstObject.optString("firstName");
+                    String lastName = tagsfirstObject.optString("lastName");
+                    author = firstName + " " + lastName;
+                }
+
+                NewsFeed newsfeed = new NewsFeed(title, section, author, date, newsUrl);
                 //Add newsfeed to list of newsfeeds
                 newsfeeds.add(newsfeed);
             }

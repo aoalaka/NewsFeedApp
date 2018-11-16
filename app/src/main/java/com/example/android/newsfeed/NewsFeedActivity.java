@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -14,12 +15,17 @@ import java.util.List;
 
 public class NewsFeedActivity extends AppCompatActivity {
     /** URL for earthquake data from the USGS dataset */
-    private static final String USGS_REQUEST_URL =
+    private static final String GUARDIAN_REQUEST_URL =
             "https://content.guardianapis.com/search?section=education" +
                     "&order-by=newest&show-tags=contributor&page-size=10&api-key=78aa14a6-b3b2-48a8-bf4e-1f85088ff7dd";
 
     /** Adapter for the list of newsfeeds */
     private NewsFeedAdapter mAdapter;
+
+    /**
+     * TextView that is displayed when the list is empty
+     */
+//    private TextView emptyStateTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +33,9 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         // Find a reference to the {@link ListView} in the layout
         ListView newsfeedListView = (ListView) findViewById(R.id.list);
+
+        /*emptyStateTextView = (TextView) findViewById(R.id.empty_state_text_view);
+        newsfeedListView.setEmptyView(emptyStateTextView);*/
 
         // Create a new adapter that takes an empty list of newsfeeds as input
         mAdapter = new NewsFeedAdapter(this, new ArrayList<NewsFeed>());
@@ -56,7 +65,7 @@ public class NewsFeedActivity extends AppCompatActivity {
 
         // Start the AsyncTask to fetch the earthquake data
         NewsFeedAsyncTask task = new NewsFeedAsyncTask();
-        task.execute(USGS_REQUEST_URL);
+        task.execute(GUARDIAN_REQUEST_URL);
     }
 
     /**
@@ -95,7 +104,7 @@ public class NewsFeedActivity extends AppCompatActivity {
          * This method runs on the main UI thread after the background work has been
          * completed. This method receives as input, the return value from the doInBackground()
          * method. First we clear out the adapter, to get rid of earthquake data from a previous
-         * query to USGS. Then we update the adapter with the new list of earthquakes,
+         * query to GUARDIAN. Then we update the adapter with the new list of earthquakes,
          * which will trigger the ListView to re-populate its list items.
          */
         @Override
@@ -109,5 +118,13 @@ public class NewsFeedActivity extends AppCompatActivity {
                 mAdapter.addAll(data);
             }
         }
+    }
+
+    @Override
+    // This method initialize the contents of the Activity's options menu.
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the Options Menu we specified in XML
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 }

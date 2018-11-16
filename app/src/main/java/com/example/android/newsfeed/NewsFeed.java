@@ -13,7 +13,7 @@ public class NewsFeed {
     private String mSection;
 
     /* Author or Contributor of the News*/
-    //private String mAuthor;
+    private String mAuthor;
 
     /* Publication Date and Time of the News*/
     private String mTime;
@@ -27,10 +27,10 @@ public class NewsFeed {
      * Constructs a new {@link NewsFeed} object.
      *
      */
-    public NewsFeed(String title, String section, String time, String newsUrl) {
+    public NewsFeed(String title, String section, String author, String time, String newsUrl) {
         mTitle = title;
         mSection = section;
-        //mAuthor = author;
+        mAuthor = author;
         mTime = time;
         mFeedUrl = newsUrl;
     }
@@ -52,9 +52,9 @@ public class NewsFeed {
     /*
      * Returns the News Author's name
      */
-//    public String getAuthor() {
-//        return mAuthor;
-//    }
+    public String getAuthor() {
+        return mAuthor;
+    }
 
     /*
      * Returns the publication date and time of the news

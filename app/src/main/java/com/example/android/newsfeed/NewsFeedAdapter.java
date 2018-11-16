@@ -1,6 +1,8 @@
 package com.example.android.newsfeed;
 
 import android.app.Activity;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,17 +43,27 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
         // Display the newsId of the current newsfeed in that TextView
         newsIdView.setText("" + formattedNewsId);
 
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable newsIdCircle = (GradientDrawable) newsIdView.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int newsIdColor = getNewsIdColor(currentNewsFeed.getTitle());
+
+        // Set the color on the magnitude circle
+        newsIdCircle.setColor(newsIdColor);
 
         //Find the TextView with view ID primary_location
         TextView sectionView = (TextView) listItemView.findViewById(R.id.section);
         sectionView.setText(currentNewsFeed.getSection());
 
+        //Find the TextView with view ID primary_location
+        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
+        authorView.setText(currentNewsFeed.getAuthor());
+
         //Find the TextView with view ID location_offset
         TextView titleView = (TextView) listItemView.findViewById(R.id.title);
         titleView.setText(currentNewsFeed.getTitle());
-
-        /*TextView authorView = (TextView) listItemView.findViewById(R.id.author);
-        titleView.setText(currentNewsFeed.getAuthor());*/
 
         // Create a new Date object from the time in milliseconds of the newsfeed
         String dateString = currentNewsFeed.getTime();
@@ -78,7 +90,7 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
      * Return the formatted date string (i.e. "Mar 3, 1984") from a Date object.
      */
     private String formatDate(String dateString) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = null;
         try {
             date = dateFormat.parse(dateString);
@@ -94,7 +106,7 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
      */
     private String formatTime(String dateString) {
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = null;
         try {
             date = dateFormat.parse(dateString);
@@ -109,9 +121,96 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
      * Return the formatted newsId string showing 1 decimal place (i.e. "3.2")
      * from a decimal newsId value.
      */
-    private char formatNewsId(String newsTitle) {
+    public char formatNewsId(String newsTitle) {
         char newsId = newsTitle.charAt(0);
         return newsId;
+    }
+
+    private int getNewsIdColor(String newsTitle) {
+        int newsIdColorResourceId;
+        char newsId = formatNewsId(newsTitle);
+        String newsIdString = "" + newsId;
+        switch (newsIdString) {
+            case "A":
+                newsIdColorResourceId = R.color.A;
+                break;
+            case "B":
+                newsIdColorResourceId = R.color.B;
+                break;
+            case "C":
+                newsIdColorResourceId = R.color.C;
+                break;
+            case "D":
+                newsIdColorResourceId = R.color.D;
+                break;
+            case "E":
+                newsIdColorResourceId = R.color.E;
+                break;
+            case "F":
+                newsIdColorResourceId = R.color.F;
+                break;
+            case "G":
+                newsIdColorResourceId = R.color.G;
+                break;
+            case "H":
+                newsIdColorResourceId = R.color.H;
+                break;
+            case "I":
+                newsIdColorResourceId = R.color.I;
+                break;
+            case "J":
+                newsIdColorResourceId = R.color.J;
+                break;
+            case "K":
+                newsIdColorResourceId = R.color.K;
+                break;
+            case "L":
+                newsIdColorResourceId = R.color.L;
+                break;
+            case "M":
+                newsIdColorResourceId = R.color.M;
+                break;
+            case "N":
+                newsIdColorResourceId = R.color.N;
+                break;
+            case "O":
+                newsIdColorResourceId = R.color.O;
+                break;
+            case "P":
+                newsIdColorResourceId = R.color.P;
+                break;
+            case "Q":
+                newsIdColorResourceId = R.color.Q;
+                break;
+            case "R":
+                newsIdColorResourceId = R.color.R;
+                break;
+            case "S":
+                newsIdColorResourceId = R.color.S;
+                break;
+            case "T":
+                newsIdColorResourceId = R.color.T;
+                break;
+            case "U":
+                newsIdColorResourceId = R.color.U;
+                break;
+            case "V":
+                newsIdColorResourceId = R.color.V;
+                break;
+            case "W":
+                newsIdColorResourceId = R.color.W;
+                break;
+            case "X":
+                newsIdColorResourceId = R.color.X;
+                break;
+            case "Y":
+                newsIdColorResourceId = R.color.Y;
+                break;
+            default:
+                newsIdColorResourceId = R.color.Z;
+                break;
+        }
+        return ContextCompat.getColor(getContext(), newsIdColorResourceId);
     }
 }
 
