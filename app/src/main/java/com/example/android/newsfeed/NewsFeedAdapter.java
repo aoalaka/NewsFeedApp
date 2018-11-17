@@ -38,34 +38,34 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
 
         // Find the TextView with view ID news_id
         TextView newsIdView = (TextView) listItemView.findViewById(R.id.news_id);
-        // Format the newsId to show 1 decimal place
+        // Format the newsId to show the first character of the news title
         char formattedNewsId = formatNewsId(currentNewsFeed.getTitle());
         // Display the newsId of the current newsfeed in that TextView
         newsIdView.setText("" + formattedNewsId);
 
-        // Set the proper background color on the magnitude circle.
+        // Set the proper background color on the newsId rectangle.
         // Fetch the background from the TextView, which is a GradientDrawable.
-        GradientDrawable newsIdCircle = (GradientDrawable) newsIdView.getBackground();
+        GradientDrawable newsIdRectangle = (GradientDrawable) newsIdView.getBackground();
 
-        // Get the appropriate background color based on the current earthquake magnitude
+        // Get the appropriate background color based on the newsId
         int newsIdColor = getNewsIdColor(currentNewsFeed.getTitle());
 
-        // Set the color on the magnitude circle
-        newsIdCircle.setColor(newsIdColor);
+        // Set the color on the newsId rectangle
+        newsIdRectangle.setColor(newsIdColor);
 
-        //Find the TextView with view ID primary_location
+        //Find the TextView with view ID section
         TextView sectionView = (TextView) listItemView.findViewById(R.id.section);
         sectionView.setText(currentNewsFeed.getSection());
 
-        //Find the TextView with view ID primary_location
+        //Find the TextView with view ID author
         TextView authorView = (TextView) listItemView.findViewById(R.id.author);
         authorView.setText(currentNewsFeed.getAuthor());
 
-        //Find the TextView with view ID location_offset
+        //Find the TextView with view ID title
         TextView titleView = (TextView) listItemView.findViewById(R.id.title);
         titleView.setText(currentNewsFeed.getTitle());
 
-        // Create a new Date object from the time in milliseconds of the newsfeed
+        // Create a DateString from the Time string extracted from the JSON API
         String dateString = currentNewsFeed.getTime();
 
         // Find the TextView with view ID date
@@ -118,8 +118,8 @@ public class NewsFeedAdapter extends ArrayAdapter<NewsFeed> {
     }
 
     /**
-     * Return the formatted newsId string showing 1 decimal place (i.e. "3.2")
-     * from a decimal newsId value.
+     * Return the formatted newsId string showing the first character of the
+     * news titl
      */
     public char formatNewsId(String newsTitle) {
         char newsId = newsTitle.charAt(0);

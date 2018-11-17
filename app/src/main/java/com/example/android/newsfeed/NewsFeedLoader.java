@@ -7,7 +7,7 @@ import android.util.Log;
 import java.util.List;
 
 /**
- * Loads a list of earthquakes by using an AsyncTask to perform the
+ * Loads a list of news feeds by using a Loader to perform the
  * network request to the given URL.
  */
 

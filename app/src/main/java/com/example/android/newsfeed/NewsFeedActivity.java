@@ -26,7 +26,7 @@ import static com.example.android.newsfeed.QueryUtils.LOG_TAG;
 
 public class NewsFeedActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<NewsFeed>> {
     /**
-     * URL for earthquake data from the USGS dataset
+     * URL for News data from the UGuardian API
      */
     private static final String GUARDIAN_REQUEST_URL =
             "https://content.guardianapis.com/search";
@@ -37,7 +37,7 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
     private NewsFeedAdapter mAdapter;
 
     /**
-     * Constant value for the earthquake loader ID. We can choose any integer.
+     * Constant value for the newsfeed loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
      */
     private static final int NEWSFEED_LOADER_ID = 1;
@@ -149,7 +149,7 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
 
 
 
-        // Return the completed uri `http://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=10&minmag=minMagnitude&orderby=time
+        // Return the completed uri `https://content.guardianapis.com/search?section=business&order-by=newest&page-size=10&show-tags=contributor&api-key=78aa14a6-b3b2-48a8-bf4e-1f85088ff7dd'
         return new NewsFeedLoader(this, uriBuilder.toString());
 
     }
