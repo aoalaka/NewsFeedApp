@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -46,6 +47,9 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
      * TextView that is displayed when the list is empty
      */
     private TextView emptyStateTextView;
+
+    private SwipeRefreshLayout newsRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,17 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
+        newsRefreshLayout = findViewById(R.id.swipeRefreshLayout_listView);
+        newsRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        newsRefreshLayout.setRefreshing(true);
+                        newsUpdate();
+                    }
+                }
+        );
+
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -109,7 +124,6 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
             emptyStateTextView.setText(R.string.no_internet_connection);
         }
         Log.i(LOG_TAG, "Earthquake Activity onCreate() called ...");
-
     }
 
     @Override
@@ -127,7 +141,7 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
         String pageSize = sharedPrefs.getString(
                 getString(R.string.settings_page_size_key),
                 getString(R.string.settings_page_size_default));
-        String orderBy  = sharedPrefs.getString(
+        String orderBy = sharedPrefs.getString(
                 getString(R.string.settings_order_by_key),
                 getString(R.string.settings_order_by_default)
         );
@@ -138,15 +152,16 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
         // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        // Append query parameter and its value. For example, the `section=technology`
-        uriBuilder.appendQueryParameter("section", section);
-        uriBuilder.appendQueryParameter("tag", tag);
+        if (!section.isEmpty() || !tag.isEmpty()) {
+            // Append query parameter and its value. For example, the `section=technology`
+            uriBuilder.appendQueryParameter("section", section);
+            uriBuilder.appendQueryParameter("tag", tag);
+        }
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("page-size", pageSize);
         uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("order-by", orderBy);
         uriBuilder.appendQueryParameter("api-key", "78aa14a6-b3b2-48a8-bf4e-1f85088ff7dd");
-
 
 
         // Return the completed uri `https://content.guardianapis.com/search?section=business&order-by=newest&page-size=10&show-tags=contributor&api-key=78aa14a6-b3b2-48a8-bf4e-1f85088ff7dd'
@@ -194,7 +209,19 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
+        } else if (id == R.id.action_help) {
+            Intent settingsIntent = new Intent(this, HelpActivity.class);
+            startActivity(settingsIntent);
+        } else if (id == R.id.action_developer) {
+            Intent settingsIntent = new Intent(this, DeveloperInfoActivity.class);
+            startActivity(settingsIntent);
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void newsUpdate() {
+        // TODO implement a refresh
+        newsRefreshLayout.setRefreshing(false); // Disables the refresh icon
+    }
+
 }

@@ -33,14 +33,14 @@ public final class QueryUtils {
     }
 
     /**
-         * Query the Guardian dataset and return a list of {@link NewsFeed} objects.
-         */
-        public static List<NewsFeed> fetchNewsFeedData(String requestUrl) {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+     * Query the Guardian dataset and return a list of {@link NewsFeed} objects.
+     */
+    public static List<NewsFeed> fetchNewsFeedData(String requestUrl) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -180,6 +180,9 @@ public final class QueryUtils {
                     String firstName = tagsfirstObject.optString("firstName");
                     String lastName = tagsfirstObject.optString("lastName");
                     author = firstName + " " + lastName;
+                    if (author.length() > 15) {
+                        author = firstName.charAt(0) + ". " + lastName;
+                    }
                 }
 
                 NewsFeed newsfeed = new NewsFeed(title, section, author, date, newsUrl);

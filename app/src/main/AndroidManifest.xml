@@ -25,6 +25,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.newsfeed.NewsFeedActivity"/>
         </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/help_title"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.newsfeed.NewsFeedActivity"/>
+        </activity>
+        <activity
+            android:name=".DeveloperInfoActivity"
+            android:label="@string/developer_title"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.newsfeed.NewsFeedActivity"/>
+        </activity>
     </application>
 
 </manifest>

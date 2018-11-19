@@ -5,4 +5,10 @@
     <item
         android:id="@+id/action_settings"
         android:title="@string/settings_menu_item" />
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/help_menu_item" />
+    <item
+        android:id="@+id/action_developer"
+        android:title="@string/developer_menu_item" />
 </menu>
