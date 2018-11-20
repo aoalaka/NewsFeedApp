@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -50,13 +51,19 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
 
     private SwipeRefreshLayout newsRefreshLayout;
 
+    ListView newsfeedListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newsfeed_activity);
 
+        // Find a reference to the {@link SwipeRefreshLayout} in the layout
+        newsRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout_listView);
+        newsRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.orange),getResources().getColor(R.color.green) , getResources().getColor(R.color.blue));
+
         // Find a reference to the {@link ListView} in the layout
-        ListView newsfeedListView = (ListView) findViewById(R.id.list);
+        newsfeedListView = (ListView) findViewById(R.id.list);
 
         emptyStateTextView = (TextView) findViewById(R.id.empty_state_text_view);
         newsfeedListView.setEmptyView(emptyStateTextView);
@@ -87,16 +94,13 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
-        newsRefreshLayout = findViewById(R.id.swipeRefreshLayout_listView);
-        newsRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        newsRefreshLayout.setRefreshing(true);
-                        newsUpdate();
-                    }
-                }
-        );
+        newsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshNews();
+            }
+        });
+
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -125,6 +129,7 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
         }
         Log.i(LOG_TAG, "Earthquake Activity onCreate() called ...");
     }
+
 
     @Override
     // onCreateLoader instantiates and returns a new Loader for the given ID
@@ -219,9 +224,58 @@ public class NewsFeedActivity extends AppCompatActivity implements LoaderManager
         return super.onOptionsItemSelected(item);
     }
 
-    private void newsUpdate() {
-        // TODO implement a refresh
-        newsRefreshLayout.setRefreshing(false); // Disables the refresh icon
-    }
+    private void refreshNews() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter = new NewsFeedAdapter(NewsFeedActivity.this, new ArrayList<NewsFeed>());
+                newsfeedListView.setAdapter(mAdapter);
+                // Set an item click listener on the ListView, which sends an intent to a web browser
+                // to open a website with more information about the selected newsfeed.
+                newsfeedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        // Find the current newsfeed that was clicked on
+                        NewsFeed currentNewsFeed = mAdapter.getItem(position);
 
+                        // Convert the String URL into a URI object (to pass into the Intent constructor)
+                        Uri newsfeedUri = Uri.parse(currentNewsFeed.getNewsUrl());
+
+                        // Create a new intent to view the newsfeed URI
+                        Intent websiteIntent = new Intent(Intent.ACTION_VIEW, newsfeedUri);
+
+                        // Send the intent to launch a new activity
+                        startActivity(websiteIntent);
+                    }
+                });
+                // Get a reference to the ConnectivityManager to check state of network connectivity
+                ConnectivityManager connMgr = (ConnectivityManager)
+                        getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                // Get details on the currently active default data network
+                NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+                // If there is a network connection, fetch data
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    // Get a reference to the LoaderManager, in order to interact with loaders.
+                    android.support.v4.app.LoaderManager loaderManager = getSupportLoaderManager();
+
+                    // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+                    // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+                    // because this activity implements the LoaderCallbacks interface).
+                    loaderManager.initLoader(NEWSFEED_LOADER_ID, null, NewsFeedActivity.this);
+                } else {
+                    // Otherwise, display error
+                    // First, hide loading indicator so error message will be visible
+                    View loadingIndicator = findViewById(R.id.loading_indicator);
+                    loadingIndicator.setVisibility(View.GONE);
+
+                    // Update empty state with no connection error message
+                    emptyStateTextView.setText(R.string.no_internet_connection);
+                }
+                Log.i(LOG_TAG, "Earthquake Activity onCreate() called ...");
+                newsRefreshLayout.setRefreshing(false);
+            }
+        }, 2500);
+    }
 }

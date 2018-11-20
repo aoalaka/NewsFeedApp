@@ -72,4 +72,8 @@
     <color name="Y">#e85318</color>
 
     <color name="Z">#536791</color>
+
+    <color name="orange">#FF9900</color>
+    <color name="green">#009900</color>
+    <color name="blue">#000099</color>
 </resources>
